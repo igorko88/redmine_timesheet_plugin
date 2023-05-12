@@ -54,13 +54,13 @@ unless Redmine::Plugin.registered_plugins.keys.include?(:redmine_timesheet_plugi
     permission :see_all_project_timesheets, { }, :require => :member
 
     menu(:top_menu,
-         :timesheet,
-         {:controller => :timesheet, :action => :index},
-         :caption => :timesheet_title,
-         :if => Proc.new {
-           User.current.allowed_to?(:see_project_timesheets, nil, :global => true) ||
-           User.current.allowed_to?(:view_time_entries, nil, :global => true) ||
-           User.current.admin?
-         })
+     :timesheet,
+     {:controller => :timesheet, :action => :index},
+     :caption => :timesheet_title,
+     :if => Proc.new { !User.current.is_projects_viewer_role? && (
+       User.current.allowed_to?(:see_project_timesheets, nil, :global => true) ||
+       User.current.allowed_to?(:view_time_entries, nil, :global => true) ||
+       User.current.admin? )
+     })
   end
 end
